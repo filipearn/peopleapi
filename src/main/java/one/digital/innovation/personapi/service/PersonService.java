@@ -31,26 +31,16 @@ public class PersonService {
         Person personToSave = personMapper.toModel(personDTO);
 
         Person savedPerson = personRepository.save(personToSave);
-        return MessageResponseDTO
-                .builder()
-                .message(String.format("Created person '%s %s' with ID: %d",
-                        savedPerson.getFirstName(),
-                        savedPerson.getLastName(),
-                        savedPerson.getId()))
-                .build();
+        return createMethodResponse(savedPerson, "Created person '%s %s' with ID: %d");
     }
 
-    public MessageResponseDTO updatePerson(PersonDTO personDTO) {
-        Person personToSave = personMapper.toModel(personDTO);
+    public MessageResponseDTO updatePerson(Long id, PersonDTO personDTO) throws PersonNotFoundException {
+        verifyIfExists(id);
 
-        Person savedPerson = personRepository.findById(personToSave.getId()).get();
-        return MessageResponseDTO
-                .builder()
-                .message(String.format("Created person '%s %s' with ID: %d",
-                        savedPerson.getFirstName(),
-                        savedPerson.getLastName(),
-                        savedPerson.getId()))
-                .build();
+        Person personToUpdate = personMapper.toModel(personDTO);
+
+        Person savedPerson = personRepository.save(personToUpdate);
+        return createMethodResponse(savedPerson, "Updated person '%s %s' with ID: %d");
     }
 
     public List<PersonDTO> listAll(){
@@ -70,6 +60,16 @@ public class PersonService {
         verifyIfExists(id);
 
         personRepository.deleteById(id);
+    }
+
+    private MessageResponseDTO createMethodResponse(Person savedPerson, String s) {
+        return MessageResponseDTO
+                .builder()
+                .message(String.format(s,
+                        savedPerson.getFirstName(),
+                        savedPerson.getLastName(),
+                        savedPerson.getId()))
+                .build();
     }
 
     private Person verifyIfExists(Long id) throws PersonNotFoundException {

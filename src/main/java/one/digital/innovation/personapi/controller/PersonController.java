@@ -33,8 +33,8 @@ public class PersonController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public MessageResponseDTO updatePerson(@RequestBody @Valid PersonDTO personDTO) {
-        return personService.updatePerson(personDTO);
+    public MessageResponseDTO updatePerson(@PathVariable Long id, @RequestBody @Valid PersonDTO personDTO) throws PersonNotFoundException {
+        return personService.updatePerson(id, personDTO);
     }
 
     @GetMapping
