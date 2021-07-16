@@ -31,6 +31,12 @@ public class PersonController {
         return personService.createPerson(personDTO);
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public MessageResponseDTO updatePerson(@RequestBody @Valid PersonDTO personDTO) {
+        return personService.updatePerson(personDTO);
+    }
+
     @GetMapping
     public List<PersonDTO> listAll() {
         return personService.listAll();
@@ -39,5 +45,11 @@ public class PersonController {
     @GetMapping("/{id}")
     public PersonDTO findById(@PathVariable Long id) throws PersonNotFoundException {
         return personService.listById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(@PathVariable Long id) throws PersonNotFoundException {
+        personService.deleteById(id);
     }
 }
